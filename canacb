@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+""" Start from command line """
+
+from src.main import main
+
+main()
