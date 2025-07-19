@@ -111,7 +111,9 @@ class UserInterface:
         frames = {}
         row = 0
         for name, frame, weight in framework:
-            widget = frame(self._root, self, self._preferences.get(name, {}))
+            if name not in self._preferences:
+                self._preferences[name] = {}
+            widget = frame(self._root, self, self._preferences[name])
             widget.grid(row=row, column=0, sticky="nsew")
             self._root.rowconfigure(row, weight=weight)
             row += 1

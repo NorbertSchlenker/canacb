@@ -764,6 +764,9 @@ class SymbolChanger(tk.Toplevel):
         super().__init__(parent)
 
         self._controller = controller
+        if self._controller.portfolio is None:
+            self.destroy()
+            return
 
         self.title("Symbol change")
         cx, cy = self.winfo_pointerxy()
