@@ -5,8 +5,8 @@ Since 1972, Canadian tax law requires declaration of capital gains when you disp
 It's usually simple to determine what you sold an asset for, but sometimes not so easy to reconstruct what its cost (in tax terms, its "adjusted cost base")
 is if you've bought and sold over many years.  Records get lost. Memories fade as time goes by. CAN-ACB can help.
 
-## Features:
-- Cross platform Python3 application with an intuitive graphical user interface
+## Features
+- Cross platform pure Python3 application with an intuitive graphical user interface
 - Multiple portfolios, multiple holdings
 - Settlement date accounting, per Canadian rules
 - Average cost accounting, per Canadian rules
@@ -17,3 +17,13 @@ is if you've bought and sold over many years.  Records get lost. Memories fade a
 - Local data storage - your data is YOUR data
 - No internet access required; usable on an air gapped machine after installation
 
+## Software prerequisites
+- git
+- python >= 3.5
+- tk/tcl >= 8.6.8
+
+## Installation and usage (preliminary)
+```bash
+$ git clone https://github.com/NorbertSchlenker/canacb
+$ cd canacb
+$ python3 ./canacb
