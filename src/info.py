@@ -217,6 +217,8 @@ class FAQ(tk.Toplevel):
         ("How do I report bugs or problems?",
             "By email to canacb@libra-investments.com."),
     )
+    _ANSWER_PADX = 15
+    _WRAP_LENGTH = 600
 
     def __init__(self, parent):
         """Lays out the FAQ window."""
@@ -232,6 +234,7 @@ class FAQ(tk.Toplevel):
         self.bind("<Escape>", lambda event: self.iconify())
 
         self.columnconfigure(0, weight=1)
+        self.rowconfigure(10, weight=1)
 
         answer_font = tkFont.nametofont("TkTextFont").copy()
         answer_font["size"] = 11
@@ -253,22 +256,22 @@ class FAQ(tk.Toplevel):
             justify="left",
             textvariable=self._answer,
             width=75,
-            wraplength=600,
+            wraplength=self._WRAP_LENGTH,
         )
-        answers.grid(row=10, column=0, padx=15, sticky="nsew")
+        answers.grid(row=10, column=0, padx=self._ANSWER_PADX, sticky="nsew")
 
         button_frame = tk.Frame(self)
         button_frame.grid(row=20, column=0, padx=15, pady=10)
         self._next = tk.Button(button_frame, text="Next", command=self._on_next)
         self._next.grid(row=0, column=10, padx=10)
         self._enable_disable_next()
-        tk.Button(button_frame, text="Close", command=self.iconify).grid(
-            row=0, column=20, padx=10
-        )
+        close = tk.Button(button_frame, text="Close", command=self.iconify)
+        close.grid(row=0, column=20, padx=10)
 
-        self.geometry(
-            "+{}+{}".format((self.winfo_screenwidth() - self.winfo_reqwidth()) - 50, 50)
-        )
+        min_width = max(
+            self.winfo_reqwidth(), self._WRAP_LENGTH + 2 * self._ANSWER_PADX)
+        self.geometry("+{}+{}".format(
+            self.winfo_screenwidth() - min_width - 50, 50))
         self.deiconify()
 
     def _question_chosen(self, event):
