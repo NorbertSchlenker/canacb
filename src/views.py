@@ -207,6 +207,7 @@ class CommonFrame(tk.Frame):
         self._symbol_box.config(state="normal")
         self._symbol_box.delete(0, tk.END)
         self._symbol_box.focus_set()
+        self._name_entry.delete(0, tk.END)
         self._controller.portfolio_or_symbol_changed()
         return True
 
@@ -220,6 +221,7 @@ class CommonFrame(tk.Frame):
             self._symbol_box.set(old_symbol)
             return True
         if new_symbol not in self.portfolio:
+            self._name_entry.delete(0, tk.END)
             failure = self.portfolio.add_holding(new_symbol)
             if failure is not None:
                 messagebox.showerror("Symbol addition", failure)
@@ -737,7 +739,9 @@ class ResultsFrame(tk.Frame):
 
         self._tabs = []
         for preference_key, cls, label in self._TABS:
-            tab = cls(self, controller, preferences.get(preference_key, {}))
+            if preference_key not in preferences:
+                preferences[preference_key] = {}
+            tab = cls(self, controller, preferences[preference_key])
             self._notebook.add(tab, text=label, sticky="nsew")
             self._tabs.append(tab)
 
