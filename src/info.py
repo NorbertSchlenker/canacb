@@ -75,10 +75,9 @@ class FAQ(tk.Toplevel):
             "\"Adjustment\"\n"
             "  - An amount reported in Box 42 of a T3 tax slip is \"return "
             "of capital\", which reduces ACB. Record these!\n"
-            "  - ETFs can pay \"phantom dividends\", usually capital gains "
-            "dividends which are reinvested\n"
-            "  but do not change share count. "
-            "Such dividends increase ACB and should be recorded."),
+            "  - ETFs can pay \"phantom dividends\", capital gains "
+            "dividends which are reinvested but do not change share count. "
+            "These increase ACB and should be recorded."),
         ("Why \"adjusted\" cost base?",
             "For tax purposes, the \"cost base\" of an asset is what you paid "
             "to acquire it. (In some cases, e.g. for a gift, the cost base is "
@@ -218,7 +217,7 @@ class FAQ(tk.Toplevel):
             "By email to canacb@libra-investments.com."),
     )
     _ANSWER_PADX = 15
-    _WRAP_LENGTH = 600
+    _WRAP_LENGTH = 630
 
     def __init__(self, parent):
         """Lays out the FAQ window."""
@@ -255,7 +254,7 @@ class FAQ(tk.Toplevel):
             height=13,
             justify="left",
             textvariable=self._answer,
-            width=75,
+            width=70,
             wraplength=self._WRAP_LENGTH,
         )
         answers.grid(row=10, column=0, padx=self._ANSWER_PADX, sticky="nsew")

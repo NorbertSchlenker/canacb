@@ -679,6 +679,8 @@ class Holding:
         total_outlays = 0.0
         total_gain = 0.0
         for transaction, state in self._history:
+            if transaction.settled[0:4] > year:
+                break
             if isinstance(transaction, Buy):
                 if earliest_acquisition is None:
                     earliest_acquisition = transaction.settled[0:4]
@@ -688,8 +690,6 @@ class Holding:
                     earliest_acquisition = None
                     latest_acquisition = None
                 continue
-            if transaction.settled[0:4] > year:
-                break
             if not isinstance(transaction, Sell):
                 continue
             if transaction.amount is None:
