@@ -36,7 +36,11 @@ class ApplicationMenu(tk.Menubutton):
                 "command": controller.change_symbol
                 }
             ),
-            ("command", {"label": "Settings...", "command": lambda: True}),
+            ("command", {
+                "label": "Settings...",
+                "command": controller.show_settings
+                }
+            ),
             ("separator", {}),
             ("command", {"label": "FAQ", "command": controller.show_faq}),
             ("command", {"label": "About", "command": self.show_about}),
@@ -760,6 +764,53 @@ class ResultsFrame(tk.Frame):
         """Updates the notebook's tab labels"""
         for index, tab in enumerate(self._tabs):
             self._notebook.tab(index, text=tab.title)
+
+
+class Settings(tk.Toplevel):
+    """A window to facilitate preference changes"""
+    def __init__(self, parent, controller, preferences):
+        super().__init__(parent)
+
+        self._controller = controller
+
+        theme_names = sorted(ttk.Style().theme_names())
+        self.autosave_var = tk.StringVar()
+        self.autosave_var.set(preferences["autosave"])
+        self.theme_var = tk.StringVar()
+        self.theme_var.set(preferences["theme"])
+
+        self.title("Settings")
+        cx, cy = self.winfo_pointerxy()
+        self.geometry("+{:d}+{:d}".format(cx + 80, cy))
+        self.protocol("WM_DELETE_WINDOW", self.withdraw)
+        self.bind("<Escape>", lambda e: self.withdraw())
+
+        frame = tk.Frame(self)
+        tk.Label(frame, text="Autosave every").grid(row=0, column=0, padx=5)
+        tk.Entry(frame, width=3, textvariable=self.autosave_var).grid(
+            row=0, column=1)
+        tk.Label(frame, text="minutes (zero to turn off)").grid(
+            row=0, column=2, padx=2, pady=5)
+        frame.grid(row=0, column=0, padx=2, pady=5, sticky="w")
+        frame = tk.Frame(self)
+        tk.Label(frame, text="UI theme").grid(row=1, column=0, padx=5)
+        combo = ttk.Combobox(frame, width=10, values=theme_names,
+            state="readonly", textvariable=self.theme_var)
+        combo.grid(row=1, column=1, padx=5)       
+        frame.grid(row=1, column=0, padx=2, pady=5, sticky="w")
+        frame = tk.Frame(self)
+        tk.Button(frame, text="OK", command=self._on_ok).grid(
+            row=0, column=0, padx=10)
+        tk.Button(frame, text="Cancel", command=self.withdraw).grid(
+            row=0, column=1, padx=10)
+        frame.grid(row=2, column=0, padx=2, pady=10)
+
+    def _on_ok(self, event=None):
+        ttk.Style().theme_use(self.theme_var.get())
+        self._controller._preferences["theme"] = self.theme_var.get()
+        self._controller.set_autosave_interval(self.autosave_var.get())
+        self.withdraw()
+        return True
 
 
 class SymbolChanger(tk.Toplevel):

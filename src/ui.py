@@ -4,19 +4,20 @@
 
 from copy import deepcopy
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 
 from src import cfg
 from src.pfo import Portfolio
 from src.info import FAQ, Welcome
 from src.views import ApplicationMenu
 from src.views import CommonFrame, BuySellFrame, SplitFrame, AdjustmentFrame
-from src.views import ResultsFrame, SymbolChanger
+from src.views import ResultsFrame, Settings, SymbolChanger
 
 
 DEFAULT_PREFERENCES = {
-    "autosave": 10,  # autosave at 10 minute intervals
+    "autosave": 10,        # autosave at 10 minute intervals
     "geometry": "+50+50",  # window towards NW corner of screen
+    "theme": "default",    # use default theme
 }
 
 
@@ -37,6 +38,7 @@ class UserInterface:
 
         self._autosave_pending = None
         self._faq = None
+        self._settings = None
 
         self._root = tk.Tk()
         self._root.withdraw()
@@ -49,6 +51,7 @@ class UserInterface:
         self._ui_frames = self._layout_internals()
         self.update_results()
 
+        ttk.Style().theme_use(self._preferences["theme"])
         self._root.deiconify()
         self._root.geometry(self._preferences["geometry"])
         self._root.mainloop()
@@ -67,13 +70,6 @@ class UserInterface:
         self._root.mainloop()
         welcome.destroy()
         return len(carry_on) > 0
-
-    def show_faq(self):
-        """Pops up the FAQ window (which only gets built on first call)"""
-        if self._faq is None:
-            self._faq = FAQ(self._root)
-        else:
-            self._faq.deiconify()
 
     def _layout_externals(self):
         """Sets initial window frame and binds key controls"""
@@ -151,6 +147,20 @@ class UserInterface:
     def change_symbol(self): #, event=None):
         """Allows the user to change a symbol"""
         SymbolChanger(self._root, self)
+
+    def show_faq(self):
+        """Pops up the FAQ window (which only gets built on first call)"""
+        if self._faq is None:
+            self._faq = FAQ(self._root)
+        else:
+            self._faq.deiconify()
+
+    def show_settings(self):
+        """Pops up the Settings window (which only gets built on first call)"""
+        if self._settings is None:
+            self._settings = Settings(self._root, self, self._preferences)
+        else:
+            self._settings.deiconify()
 
     @property
     def pm(self):
@@ -236,7 +246,7 @@ class UserInterface:
         if self.is_dirty():
             self._set_title()
             self._ui_frames["menu"].update()
-            self._set_autosave()
+            self._start_autosave()
 
     def save(self):
         """Forwards a save request to the application.
@@ -258,13 +268,26 @@ class UserInterface:
         else:
             self._preferences["geometry"] = temp_geometry_preference
             if self._autosave_pending is None:
-                self._set_autosave()
+                self._start_autosave()
             messagebox.showerror("Save failed", failure)
         self._set_title()
         return failure
 
-    def _set_autosave(self):
-        """Sets an autosave timer running per user preference.
+    def set_autosave_interval(self, interval: str):
+        """Sets the autosave interval.
+
+        *** DESIGN CHOICE: doesn't alter an already running timer ***
+        """
+        try:
+            interval = int(interval)
+            if interval >= 0:
+                self._preferences["autosave"] = "{:d}".format(interval)
+        except ValueError:
+            pass
+        return
+
+    def _start_autosave(self):
+        """Starts an autosave timer running per user preference.
 
         User preference is in minutes, while timers operate in millisecons.
         """
@@ -288,5 +311,5 @@ class UserInterface:
         if the save fails, sets another timer.
         """
         if self.save() is not None:
-            self._set_autosave()
+            self._start_autosave()
         return True
