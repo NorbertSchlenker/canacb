@@ -51,7 +51,7 @@ class UserInterface:
         self._ui_frames = self._layout_internals()
         self.update_results()
 
-        ttk.Style().theme_use(self._preferences["theme"])
+        self.set_theme(self._preferences["theme"])
         self._root.deiconify()
         self._root.geometry(self._preferences["geometry"])
         self._root.mainloop()
@@ -82,8 +82,8 @@ class UserInterface:
         self._root.bind("<F1>", lambda event: self.show_faq())
         self._root.bind(
             "<Return>",
-            lambda event: (
-                event.widget.invoke() if isinstance(event.widget, tk.Button) else None
+            lambda event: (event.widget.invoke()
+                if isinstance(event.widget, tk.Button) else None
             ),
         )
 
@@ -92,6 +92,12 @@ class UserInterface:
             self._root.title(cfg.APP_NAME + "*")
         else:
             self._root.title(cfg.APP_NAME)
+
+    def set_theme(self, theme_name):
+        """Sets the theme for ttk widgets"""
+        ttk.Style().theme_use(theme_name)
+        self._preferences["theme"] = theme_name
+        self._reveal_dirt()
 
     def _layout_internals(self):
         """Lays out the widgets inside the user interface."""
@@ -125,7 +131,7 @@ class UserInterface:
             or self._name_server.is_dirty()
         )
 
-    def clean_exit(self, event=None):
+    def clean_exit(self, _event=None):
         """Handles user interface exit cleanly.  Offers to save data if
         anything has been modified during execution.
         """
@@ -144,7 +150,7 @@ class UserInterface:
     def change_settings(self):
         """Allows the user to change a few preferences"""
 
-    def change_symbol(self): #, event=None):
+    def change_symbol(self):
         """Allows the user to change a symbol"""
         SymbolChanger(self._root, self)
 
@@ -243,6 +249,12 @@ class UserInterface:
         then enables the Save menu item and sets an autosave timer.
         """
         self._ui_frames["results"].update_results()
+        self._reveal_dirt()
+
+    def _reveal_dirt(self):
+        """If transient state has changed, modifies the window title,
+        enables the Save menu item, and starts an autosave timer.
+        """
         if self.is_dirty():
             self._set_title()
             self._ui_frames["menu"].update()
@@ -281,10 +293,10 @@ class UserInterface:
         try:
             interval = int(interval)
             if interval >= 0:
-                self._preferences["autosave"] = "{:d}".format(interval)
+                self._preferences["autosave"] = interval
+                self._reveal_dirt()
         except ValueError:
             pass
-        return
 
     def _start_autosave(self):
         """Starts an autosave timer running per user preference.

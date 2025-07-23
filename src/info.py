@@ -130,8 +130,8 @@ class FAQ(tk.Toplevel):
             "A note: If you're recording an F/X rate, there is a good "
             "argument for recording the rate as of the TRADE date, not the "
             "SETTLED date that you have for the transaction. "
-            "It's your choice. Pick a method "
-            "and stick with it for everything, and you will be fine with CRA."),
+            "It's your choice. Pick a method and "
+            "stick with it for everything, and you will be fine with CRA."),
         ("Dates are labelled \"settled\". What's that about?",
             "If you sell Royal Bank shares on the TSX "
             "today, the trade settles on the next business day.  If today is "
@@ -156,8 +156,8 @@ class FAQ(tk.Toplevel):
         ("Where is my data stored?",
             "This version stores all data in a file named \"canacb.json\" in "
             "the \"data\" sub-directory. Future versions may relocate that "
-            "file in the local file system, but there are security reasons for "
-            "this placement.\n\n"
+            "file in the local file system, but there are security reasons "
+            "for this placement.\n\n"
             "NO future version will ever move this file to a remote machine "
             "or to the \"cloud\", which is inherently less secure."),
         ("This is sensitive financial info. Do you encrypt my data?",
@@ -186,8 +186,8 @@ class FAQ(tk.Toplevel):
             "connection. It will run on a computer that is never connected to "
             "the internet, as long as there is a reasonably current version "
             "of Python3 installed.\n\n"
-            "But if the data file is on a secure computer or a thumb drive and "
-            "then you attach it to an email sent to your girlfriend in "
+            "But if the data file is on a secure computer or a thumb drive "
+            "and then you attach it to an email sent to your girlfriend in "
             "Kazakhstan (or your husband sitting four feet away at the "
             "kitchen table, because that email can be routed via Kazakhstan), "
             "it's a possibility."),
@@ -261,7 +261,8 @@ class FAQ(tk.Toplevel):
 
         button_frame = tk.Frame(self)
         button_frame.grid(row=20, column=0, padx=15, pady=10)
-        self._next = tk.Button(button_frame, text="Next", command=self._on_next)
+        self._next = tk.Button(
+            button_frame, text="Next", command=self._on_next)
         self._next.grid(row=0, column=10, padx=10)
         self._enable_disable_next()
         close = tk.Button(button_frame, text="Close", command=self.iconify)
@@ -273,7 +274,7 @@ class FAQ(tk.Toplevel):
             self.winfo_screenwidth() - min_width - 50, 50))
         self.deiconify()
 
-    def _question_chosen(self, event):
+    def _question_chosen(self, _event=None):
         """Answers the question chosen by the user."""
         self._answer.set(self._FAQ[self._questions.current()][1])
         self._questions.select_clear()
@@ -281,7 +282,8 @@ class FAQ(tk.Toplevel):
 
     def _on_next(self):
         """Advances to the next question and answer."""
-        self._questions.current(min(self._questions.current() + 1, len(self._FAQ) - 1))
+        self._questions.current(
+            min(self._questions.current() + 1, len(self._FAQ) - 1))
         self._questions.select_clear()
         self._answer.set(self._FAQ[self._questions.current()][1])
         self._enable_disable_next()
@@ -301,8 +303,8 @@ class Welcome(tk.Toplevel):
     _TEXT = (
         "Canada's tax rules require you to keep track of the adjusted cost "
         "base of your security holdings. This software helps you with that. "
-        "Record transactions on screen, starting with a single portfolio. "
-        "All data is stored locally, keeping your financial information secure."
+        "Record transactions on screen, starting with a single portfolio. All "
+        "data is stored locally, keeping your financial information secure."
     )
     _WRAP_LENGTH = 540
 

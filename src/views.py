@@ -1,4 +1,5 @@
 #!/bin/env python3
+# pylint: disable=too-many-ancestors
 """Canadian ACB calculator - user interface components"""
 
 
@@ -26,19 +27,24 @@ class ApplicationMenu(tk.Menubutton):
 
         menu_items = (
             (
-                "command",
-                {"label": "Save", "command": controller.save, "state": "disabled"},
+                "command", {
+                    "label": "Save",
+                    "command": controller.save,
+                    "state": "disabled"
+                },
             ),
             ("command", {"label": "Exit", "command": controller.clean_exit}),
             ("separator", {}),
-            ("command", {
-                "label": "Change symbol...",
-                "command": controller.change_symbol
+            (
+                "command", {
+                    "label": "Change symbol...",
+                    "command": controller.change_symbol
                 }
             ),
-            ("command", {
-                "label": "Settings...",
-                "command": controller.show_settings
+            (
+                "command", {
+                    "label": "Settings...",
+                    "command": controller.show_settings
                 }
             ),
             ("separator", {}),
@@ -96,7 +102,7 @@ class CommonFrame(tk.Frame):
         self._pfo_box.bind("<FocusOut>", self._on_pfo_change)
         ToolTip(
             self._pfo_box,
-            text="Pick the portfolio you want, or create one by typing a name.",
+            text="Pick the portfolio you want, or create one by typing a name."
         )
 
         tk.Label(self, text="  Symbol").grid(row=0, column=10, padx=5)
@@ -110,7 +116,8 @@ class CommonFrame(tk.Frame):
         self._symbol_box.bind("<<ComboboxSelected>>", self._on_symbol_change)
         self._symbol_box.bind("<FocusOut>", self._on_symbol_change)
         ToolTip(
-            self._symbol_box, text="Usually a ticker symbol, but use any name you like."
+            self._symbol_box,
+            text="Usually a ticker symbol, but use any name you like."
         )
 
         tk.Label(self, text="  Name").grid(row=0, column=20, padx=5)
@@ -120,7 +127,7 @@ class CommonFrame(tk.Frame):
         self._name_entry.bind("<FocusOut>", self._controller.on_name_change)
         ToolTip(
             self._name_entry,
-            text="(Optional) Enter / change the asset name tied to this symbol.",
+            text="(Optional) Enter/change the asset name tied to this symbol."
         )
 
         tk.Label(self, text="  Settled").grid(row=0, column=30, padx=5)
@@ -215,7 +222,7 @@ class CommonFrame(tk.Frame):
         self._controller.portfolio_or_symbol_changed()
         return True
 
-    def _on_symbol_change(self, event):
+    def _on_symbol_change(self, _event):
         """Informs the controller that the UI symbol field has changed."""
         new_symbol = self.symbol.upper().strip()
         old_symbol = self._preferences.get("symbol", "")
@@ -242,7 +249,7 @@ class CommonFrame(tk.Frame):
         self._controller.portfolio_or_symbol_changed()
         return True
 
-    def _on_date_change(self, event):
+    def _on_date_change(self, _event):
         """Handles a focusout event on the settled Entry."""
         self._settled_entry.config(
             fg="black" if self._settled_entry_is_valid() else "red"
@@ -293,15 +300,24 @@ class TransactionFrame(tk.LabelFrame):
     def add_button(self, name, invoke):
         """Adds a Button to the frame"""
         self._buttons[name] = tk.Button(self, text=name, command=invoke)
-        self._buttons[name].grid(row=self._row, column=self._column, padx=10, pady=5)
+        self._buttons[name].grid(
+            row=self._row,
+            column=self._column,
+            padx=10,
+            pady=5)
         self._bump_grid()
 
     def add_validating_entry(self, name, optional, test):
         """Adds a ValidatingEntry to the frame"""
         self._entries[name] = ValidatingEntry(
-            self, optional, test, self.enable_disable_buttons, width=10, justify="right"
+            self, optional,
+            test,
+            self.enable_disable_buttons,
+            width=10,
+            justify="right"
         )
-        self._entries[name].grid(row=self._row, column=self._column, padx=2, pady=2)
+        self._entries[name].grid(
+            row=self._row, column=self._column, padx=2, pady=2)
         self._bump_grid()
 
     def enable_disable_buttons(self):
@@ -330,9 +346,10 @@ class TransactionFrame(tk.LabelFrame):
 class BuySellFrame(TransactionFrame):
     """Frame to solicit buy and sell transactions"""
 
-    def __init__(self, parent, controller=None, preferences=None):
+    def __init__(self, parent, controller=None, _preferences=None):
         """Lays out the buy/sell frame."""
-        super().__init__(parent, controller, tk.HORIZONTAL, "Purchases / sales")
+        super().__init__(
+            parent, controller, tk.HORIZONTAL, "Purchases / sales")
 
         self.add_label("Shares")
         self.add_validating_entry("shares", False, lambda v: float(v) > 0.0)
@@ -363,7 +380,7 @@ class BuySellFrame(TransactionFrame):
         self.add_button("Sell", lambda: self.trade(controller.portfolio.sell))
         self.enable_disable_buttons()
 
-    def _handle_amount_set(self, event=None):
+    def _handle_amount_set(self, _event=None):
         if self._entries["amount"].get() != "":
             self._entries["price"].delete(0, tk.END)
         return True
@@ -375,8 +392,8 @@ class BuySellFrame(TransactionFrame):
         we really only need one or the other, but neither is no good.
         """
         return super().all_entries_valid() and (
-            self._entries["price"].get() != "" or self._entries["amount"].get() != ""
-        )
+            self._entries["price"].get() != "" or
+            self._entries["amount"].get() != "")
 
     def trade(self, func):
         """Forwards a Buy or Sell button press to the portfolio."""
@@ -411,9 +428,10 @@ class BuySellFrame(TransactionFrame):
 class SplitFrame(TransactionFrame):
     """Frame to solicit split transactions"""
 
-    def __init__(self, parent, controller=None, preferences=None):
+    def __init__(self, parent, controller=None, _preferences=None):
         """Lays out the split frame."""
-        super().__init__(parent, controller, tk.HORIZONTAL, "Splits / consolidations")
+        super().__init__(
+            parent, controller, tk.HORIZONTAL, "Splits / consolidations")
 
         self.add_label("Receive")
         self.add_validating_entry("multiplier", False, lambda v: float(v) > 0.0)
@@ -450,7 +468,7 @@ class SplitFrame(TransactionFrame):
 class AdjustmentFrame(TransactionFrame):
     """Frame to solicit ACB adjustment transactions"""
 
-    def __init__(self, parent, controller=None, preferences=None):
+    def __init__(self, parent, controller=None, _preferences=None):
         """Lays out the adjustments frame."""
         super().__init__(parent, controller, tk.HORIZONTAL, "Adjustments")
 
@@ -575,7 +593,7 @@ class HistoryFrame(ResultsTab):
             return "  Transactions  "
         return "  Transactions in {}  ".format(symbol)
 
-    def _on_delete(self, event=None):
+    def _on_delete(self, _event=None):
         """Forwards transaction deletion request to the portfolio"""
         if len(self._table.selected_rows) == 0:
             return True
@@ -594,7 +612,7 @@ class HistoryFrame(ResultsTab):
         self._controller.update_results()
         return True
 
-    def _on_double_click(self, event=None):
+    def _on_double_click(self, _event=None):
         """Initiates edit of first selected transaction"""
         if len(self._table.selected_rows) >= 1:
             self._controller.edit(
@@ -626,7 +644,9 @@ class PositionFrame(ResultsTab):
         super().__init__(parent, controller, preferences)
 
         as_of = preferences.get("as_of", "")
-        if not is_isoformat(as_of):
+        try:
+            fromisoformat(as_of, strict=True)
+        except (TypeError, ValueError):
             as_of = datetime.date.today().isoformat()
             self._preferences["as_of"] = as_of
         self._table.add_picker(is_isoformat, "  As of  ", as_of, "YYYY-MM-DD")
@@ -640,8 +660,8 @@ class PositionFrame(ResultsTab):
                 as_of = " @ {}".format(as_of)
         else:
             as_of = " @ ????"
-        pfo = self._controller.portfolio_name
-        return "  {} Positions{}  ".format(pfo if pfo is not None else "", as_of)
+        pfo = self._controller.portfolio_name or ""
+        return "  {} Positions{}  ".format(pfo, as_of)
 
     def picker_changed(self):
         """Catches loss of focus"""
@@ -794,9 +814,13 @@ class Settings(tk.Toplevel):
         frame.grid(row=0, column=0, padx=2, pady=5, sticky="w")
         frame = tk.Frame(self)
         tk.Label(frame, text="UI theme").grid(row=1, column=0, padx=5)
-        combo = ttk.Combobox(frame, width=10, values=theme_names,
-            state="readonly", textvariable=self.theme_var)
-        combo.grid(row=1, column=1, padx=5)       
+        combo = ttk.Combobox(
+            frame,
+            width=10,
+            values=theme_names,
+            state="readonly",
+            textvariable=self.theme_var)
+        combo.grid(row=1, column=1, padx=5)
         frame.grid(row=1, column=0, padx=2, pady=5, sticky="w")
         frame = tk.Frame(self)
         tk.Button(frame, text="OK", command=self._on_ok).grid(
@@ -805,9 +829,8 @@ class Settings(tk.Toplevel):
             row=0, column=1, padx=10)
         frame.grid(row=2, column=0, padx=2, pady=10)
 
-    def _on_ok(self, event=None):
-        ttk.Style().theme_use(self.theme_var.get())
-        self._controller._preferences["theme"] = self.theme_var.get()
+    def _on_ok(self, _event=None):
+        self._controller.set_theme(self.theme_var.get())
         self._controller.set_autosave_interval(self.autosave_var.get())
         self.withdraw()
         return True

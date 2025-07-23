@@ -101,7 +101,7 @@ class Transaction:
         """Settled date of the transaction"""
         return self._settled
 
-    def _checked_details(self, details):
+    def _checked_details(self, _details):
         """Stub"""
         return NotImplemented
 
@@ -117,7 +117,7 @@ class Transaction:
         """Returns a representation suitable for serialization"""
         return [self._settled, self.__class__.__name__, *self._details]
 
-    def apply(self, state):
+    def apply(self, _state):
         """Stub"""
         return NotImplemented
 
@@ -163,7 +163,8 @@ class Trade(Transaction):
                 shares, price, fee, fx = details
                 amount = None
         except ValueError as exc:
-            raise ValueError("Expecting (shares, price, fee, amount, fx)") from exc
+            raise ValueError(
+                "Expecting (shares, price, fee, amount, fx)") from exc
 
         shares = checked_float(
             shares, lambda f: f > 0.0, "Share count must be positive"
@@ -171,7 +172,8 @@ class Trade(Transaction):
         if price is None:
             if amount is None:
                 raise ValueError("Must have at least one of price and amount")
-            amount = checked_float(amount, lambda f: f > 0.0, "Amount must be positive")
+            amount = checked_float(
+                amount, lambda f: f > 0.0, "Amount must be positive")
         else:
             if amount is None:
                 price = checked_float(
@@ -182,7 +184,8 @@ class Trade(Transaction):
         if fee is None:
             fee = 0.0
         else:
-            fee = checked_float(fee, lambda f: f >= 0.0, "Fee must be non-negative")
+            fee = checked_float(
+                fee, lambda f: f >= 0.0, "Fee must be non-negative")
         if fx is None:
             fx = 1.0
         else:
@@ -200,7 +203,8 @@ class Trade(Transaction):
                 ""
                 if self.fee == 0.0
                 else " {}{} fee".format(
-                    "with " if self.amount is None else fee_sign, pretty_float(self.fee)
+                    "with " if self.amount is None else fee_sign,
+                    pretty_float(self.fee)
                 )
             ),
             (
@@ -302,7 +306,8 @@ class Split(Transaction):
         """Returns the effect on share count and ACB"""
         if state.shares == 0.0:
             raise ValueError("Cannot split shares when none are held")
-        return State(state.shares * (self.multiplier / self.divisor), state.cost)
+        return State(
+            state.shares * (self.multiplier / self.divisor), state.cost)
 
 
 class Adjust(Transaction):
@@ -333,11 +338,13 @@ class Adjust(Transaction):
         except ValueError as exc:
             raise ValueError("Expecting (amount, fx, memo)") from exc
 
-        amount = checked_float(amount, lambda f: True, "Amount must be numeric")
+        amount = checked_float(
+            amount, lambda f: True, "Amount must be numeric")
         if fx is None:
             fx = 1.0
         else:
-            fx = checked_float(fx, lambda f: f >= 0.0, "FX must be a positive number")
+            fx = checked_float(
+                fx, lambda f: f >= 0.0, "FX must be a positive number")
 
         return (amount, fx, memo)
 
@@ -539,11 +546,11 @@ class Holding:
 
     def __init__(self, serializable=None):
         """Creates a holding"""
-        self._history = History(
-            []
-            if serializable is None
-            else [TransactionFactory.from_serializable(item) for item in serializable]
-        )
+        transactions = []
+        if serializable is not None:
+            for item in serializable:
+                transactions.append(TransactionFactory.from_serializable(item))
+        self._history = History(transactions)
 
     @property
     def transactions(self):
@@ -642,7 +649,8 @@ class Holding:
 
     def buy(self, settled, shares, price, fee, amount, fx):
         """Creates a transaction and applies it to the history"""
-        return self._update_history_with(Buy(settled, (shares, price, fee, amount, fx)))
+        return self._update_history_with(
+            Buy(settled, (shares, price, fee, amount, fx)))
 
     def sell(self, settled, shares, price, fee, amount, fx):
         """Creates a transaction and applies it to the history"""
@@ -693,9 +701,11 @@ class Holding:
             if not isinstance(transaction, Sell):
                 continue
             if transaction.amount is None:
-                proceeds = transaction.fx * (transaction.shares * transaction.price)
+                proceeds = transaction.fx * (
+                    transaction.shares * transaction.price)
             else:
-                proceeds = transaction.fx * (transaction.amount + transaction.fee)
+                proceeds = transaction.fx * (
+                    transaction.amount + transaction.fee)
             outlays = transaction.fx * transaction.fee
             acb = proceeds - outlays - state.gain
             total_shares += transaction.shares
@@ -850,9 +860,10 @@ class Portfolio:
 
     def serializable(self):
         """Returns a representation suitable for serialization"""
-        return {
-            symbol: holding.serializable() for symbol, holding in self._holdings.items()
-        }
+        result = {}
+        for symbol, holding in self._holdings.items():
+            result[symbol] = holding.serializable()
+        return result
 
     def buy(self, symbol, *args):
         """Forwards a buy to the specified holding"""
@@ -934,7 +945,8 @@ class Portfolio:
         total_proceeds = 0.0
         total_gain = 0.0
         for symbol, holding in sorted(self._holdings.items()):
-            shares, acquired, proceeds, acb, outlays, gain = holding.s3_record(year)
+            shares, acquired, proceeds, acb, outlays, gain = (
+                holding.s3_record(year))
             if abs(shares) < 0.0000005:
                 continue
             result.append(
@@ -954,5 +966,7 @@ class Portfolio:
         result.append(["", "", "", "", "", "", ""])
         result.append([
             "Totals", "", "",
-            pretty_float(total_proceeds), "", "", pretty_float(total_gain)])
+            pretty_float(total_proceeds, blank_if_zero=False),
+            "", "",
+            pretty_float(total_gain, blank_if_zero=False)])
         return result

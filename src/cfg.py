@@ -1,7 +1,6 @@
 #!/bin/env python3
 """Canadian ACB calculator - configuration"""
 
-
 import os
 
 

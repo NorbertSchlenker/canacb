@@ -49,7 +49,7 @@ class TableFrame(tk.Frame):
 
         self._tree.bind(
             "<Escape>",
-            lambda event: self._tree.selection_remove(event.widget.selection()),
+            lambda event: self._tree.selection_remove(event.widget.selection())
         )
 
         y_scroll = ttk.Scrollbar(self, command=self._tree.yview)
@@ -84,7 +84,7 @@ class TableFrame(tk.Frame):
         if tooltip_text is not None:
             ToolTip(self._picker, text=tooltip_text)
 
-    def _on_picker_change_finished(self, event=None):
+    def _on_picker_change_finished(self, _event=None):
         """Handles finished picker change by updating tree contents and
         informing parent.
         """
@@ -120,7 +120,7 @@ class TableFrame(tk.Frame):
         if len(contents) > 0:
             self._tree.see(iid)
 
-    def _inform_parent(self, event=None, parent_handler=None):
+    def _inform_parent(self, _event=None, parent_handler=None):
         """Informs parent handler with list of indices of selections"""
         if parent_handler is None:
             return False
@@ -136,6 +136,7 @@ class TableFrame(tk.Frame):
     def total_rows(self):
         """Total number of rows in the table"""
         return len(self._concordance)
+
 
 class ToolTip:
     """A tooltip class that pops up when the mouse is over the widget.
@@ -172,11 +173,11 @@ class ToolTip:
         label.pack(ipadx=3)
         self._id = None
 
-    def enter(self, event=None):
+    def enter(self, _event=None):
         """Fired on mouse entry to widget."""
         self.schedule()
 
-    def leave(self, event=None):
+    def leave(self, _event=None):
         """Fired on mouse leaving widget."""
         self.unschedule()
         self.hidetip()
@@ -193,9 +194,9 @@ class ToolTip:
         self.widget.after_cancel(self._id)
         self._id = None
 
-    def showtip(self, event=None):
+    def showtip(self, _event=None):
         """Pops up the tooltip near the widget's current position."""
-        (x, y, cx, cy) = self.widget.bbox("insert")
+        (x, y, _cx, _cy) = self.widget.bbox("insert")
         x += self.widget.winfo_rootx() + self._X_OFFSET
         y += self.widget.winfo_rooty() + self._Y_OFFSET
         self.tip.wm_geometry("+{:d}+{:d}".format(x, y))
@@ -206,6 +207,7 @@ class ToolTip:
         self.tip.withdraw()
 
 
+# pylint: disable=too-many-ancestors
 class ValidatingEntry(tk.Entry):
     """A tkinter Entry that validates contents on the fly per supplied test.
     Invalid contents are displayed in red as a visual cue to the user.
@@ -233,7 +235,8 @@ class ValidatingEntry(tk.Entry):
         self._valid = self._is_valid(self.get().strip())
 
         self.config(
-            validate=when, validatecommand=(self.register(self._changed), "%P"))
+            validate=when,
+            validatecommand=(self.register(self._changed), "%P"))
         self.bind("<Return>", lambda event: self._changed(self.get()))
 
     def _changed(self, text):

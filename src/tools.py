@@ -4,15 +4,14 @@
 General purpose functions to test/manipulate dates and floats.
 """
 
-
 import datetime
 
 
 _cached = {}  # Time/space tradeoff: cache use -> 5x speedup on repeats
 
 
-def fromisoformat(date_string: str, strict: bool=False) -> datetime.date:
-    """ Creates a date object from either a YYYY-MM-DD or YYYYMMDD string.
+def fromisoformat(date_string: str, strict: bool = False) -> datetime.date:
+    """Creates a date object from either a YYYY-MM-DD or YYYYMMDD string.
 
     python datetime < 3.11 has no useful isoformat method and its strptime
     method is too slow for this specific use with high volume.
@@ -93,9 +92,9 @@ def checked_float(item: str, test, fail_msg: str) -> float:
 
 def pretty_float(
     number: float,
-    min_decimals: int=2,
-    max_decimals: int=2,
-    blank_if_zero: bool=True,
+    min_decimals: int = 2,
+    max_decimals: int = 2,
+    blank_if_zero: bool = True,
 ) -> str:
     """Converts a float to a string with acceptable cosmetics. In particular,
     strips the usual format of trailing decimal places that are zero.
