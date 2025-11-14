@@ -1,4 +1,5 @@
-#!/bin/env python3
+#!/usr/bin/env python3
+
 """Tools and utilities
 
 General purpose functions to test/manipulate dates and floats.
@@ -44,21 +45,25 @@ def fromisoformat(date_string: str, strict: bool = False) -> datetime.date:
             result = datetime.date(
                 int(date_string[0:4]),
                 int(date_string[5:7]),
-                int(date_string[8:10]))
+                int(date_string[8:10]),
+            )
             _cached[date_string] = result
             return result
         if len(date_string) == 8 and not strict:
             result = datetime.date(
                 int(date_string[0:4]),
                 int(date_string[4:6]),
-                int(date_string[6:8]))
+                int(date_string[6:8]),
+            )
             _cached[date_string] = result
             return result
     except ValueError:
         pass
     raise ValueError(
         "{} not of form YYYY-MM-DD{}".format(
-            date_string, "" if strict else " or YYYYMMDD"))
+            date_string, "" if strict else " or YYYYMMDD"
+        )
+    )
 
 
 def is_isoformat(date: str):

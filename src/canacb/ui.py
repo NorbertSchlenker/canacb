@@ -1,4 +1,5 @@
-#!/bin/env python3
+#!/usr/bin/env python3
+
 """Canadian ACB calculator - user interface controller"""
 
 
@@ -6,18 +7,18 @@ from copy import deepcopy
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from src import cfg
-from src.pfo import Portfolio
-from src.info import FAQ, Welcome
-from src.views import ApplicationMenu
-from src.views import CommonFrame, BuySellFrame, SplitFrame, AdjustmentFrame
-from src.views import ResultsFrame, Settings, SymbolChanger
+from . import cfg
+from .pfo import Portfolio
+from .info import FAQ, Welcome
+from .views import ApplicationMenu
+from .views import CommonFrame, BuySellFrame, SplitFrame, AdjustmentFrame
+from .views import ResultsFrame, Settings, SymbolChanger
 
 
 DEFAULT_PREFERENCES = {
-    "autosave": 10,        # autosave at 10 minute intervals
+    "autosave": 10,  # autosave at 10 minute intervals
     "geometry": "+50+50",  # window towards NW corner of screen
-    "theme": "default",    # use default theme
+    "theme": "default",  # use default theme
 }
 
 
@@ -82,8 +83,10 @@ class UserInterface:
         self._root.bind("<F1>", lambda event: self.show_faq())
         self._root.bind(
             "<Return>",
-            lambda event: (event.widget.invoke()
-                if isinstance(event.widget, tk.Button) else None
+            lambda event: (
+                event.widget.invoke()
+                if isinstance(event.widget, tk.Button)
+                else None
             ),
         )
 

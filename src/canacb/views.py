@@ -1,5 +1,6 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 # pylint: disable=too-many-ancestors
+
 """Canadian ACB calculator - user interface components"""
 
 
@@ -7,10 +8,10 @@ import datetime
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-from src import cfg
-from src.tools import fromisoformat, is_isoformat, is_valid_year
-from src.info import About
-from src.widgets import TableFrame, ToolTip, ValidatingEntry
+from . import cfg
+from .tools import fromisoformat, is_isoformat, is_valid_year
+from .info import About
+from .widgets import TableFrame, ToolTip, ValidatingEntry
 
 
 class ApplicationMenu(tk.Menubutton):
@@ -27,25 +28,25 @@ class ApplicationMenu(tk.Menubutton):
 
         menu_items = (
             (
-                "command", {
+                "command",
+                {
                     "label": "Save",
                     "command": controller.save,
-                    "state": "disabled"
+                    "state": "disabled",
                 },
             ),
             ("command", {"label": "Exit", "command": controller.clean_exit}),
             ("separator", {}),
             (
-                "command", {
+                "command",
+                {
                     "label": "Change symbol...",
-                    "command": controller.change_symbol
-                }
+                    "command": controller.change_symbol,
+                },
             ),
             (
-                "command", {
-                    "label": "Settings...",
-                    "command": controller.show_settings
-                }
+                "command",
+                {"label": "Settings...", "command": controller.show_settings},
             ),
             ("separator", {}),
             ("command", {"label": "FAQ", "command": controller.show_faq}),
@@ -67,7 +68,7 @@ class ApplicationMenu(tk.Menubutton):
         self._about.geometry(
             "+{}+{}".format(
                 max(0, self.winfo_pointerx() - 20),
-                max(0, self.winfo_pointery() - 10)
+                max(0, self.winfo_pointery() - 10),
             )
         )
         self._about.deiconify()
@@ -102,7 +103,7 @@ class CommonFrame(tk.Frame):
         self._pfo_box.bind("<FocusOut>", self._on_pfo_change)
         ToolTip(
             self._pfo_box,
-            text="Pick the portfolio you want, or create one by typing a name."
+            text="Pick the portfolio you want, or create one by typing a name",
         )
 
         tk.Label(self, text="  Symbol").grid(row=0, column=10, padx=5)
@@ -117,17 +118,19 @@ class CommonFrame(tk.Frame):
         self._symbol_box.bind("<FocusOut>", self._on_symbol_change)
         ToolTip(
             self._symbol_box,
-            text="Usually a ticker symbol, but use any name you like."
+            text="Usually a ticker symbol, but use any name you like.",
         )
 
         tk.Label(self, text="  Name").grid(row=0, column=20, padx=5)
-        self._name_entry = tk.Entry(self, width=25, justify="left", fg="gray40")
+        self._name_entry = tk.Entry(
+            self, width=25, justify="left", fg="gray40"
+        )
         self._name_entry.insert(0, self._controller.asset_name(self.symbol))
         self._name_entry.grid(row=0, column=21, padx=2, pady=2, sticky="w")
         self._name_entry.bind("<FocusOut>", self._controller.on_name_change)
         ToolTip(
             self._name_entry,
-            text="(Optional) Enter/change the asset name tied to this symbol."
+            text="(Optional) Enter/change the asset name tied to this symbol.",
         )
 
         tk.Label(self, text="  Settled").grid(row=0, column=30, padx=5)
@@ -188,7 +191,9 @@ class CommonFrame(tk.Frame):
         self._settled_entry.config(state="normal")
         self._settled_entry.delete(0, tk.END)
         if self.symbol != "":
-            last_settled = self.portfolio.last_transaction_date_for(self.symbol)
+            last_settled = self.portfolio.last_transaction_date_for(
+                self.symbol
+            )
             if last_settled is None:
                 last_settled = datetime.date.today().isoformat()
             self._settled_entry.insert(0, last_settled)
@@ -301,23 +306,23 @@ class TransactionFrame(tk.LabelFrame):
         """Adds a Button to the frame"""
         self._buttons[name] = tk.Button(self, text=name, command=invoke)
         self._buttons[name].grid(
-            row=self._row,
-            column=self._column,
-            padx=10,
-            pady=5)
+            row=self._row, column=self._column, padx=10, pady=5
+        )
         self._bump_grid()
 
     def add_validating_entry(self, name, optional, test):
         """Adds a ValidatingEntry to the frame"""
         self._entries[name] = ValidatingEntry(
-            self, optional,
+            self,
+            optional,
             test,
             self.enable_disable_buttons,
             width=10,
-            justify="right"
+            justify="right",
         )
         self._entries[name].grid(
-            row=self._row, column=self._column, padx=2, pady=2)
+            row=self._row, column=self._column, padx=2, pady=2
+        )
         self._bump_grid()
 
     def enable_disable_buttons(self):
@@ -349,7 +354,8 @@ class BuySellFrame(TransactionFrame):
     def __init__(self, parent, controller=None, _preferences=None):
         """Lays out the buy/sell frame."""
         super().__init__(
-            parent, controller, tk.HORIZONTAL, "Purchases / sales")
+            parent, controller, tk.HORIZONTAL, "Purchases / sales"
+        )
 
         self.add_label("Shares")
         self.add_validating_entry("shares", False, lambda v: float(v) > 0.0)
@@ -392,8 +398,9 @@ class BuySellFrame(TransactionFrame):
         we really only need one or the other, but neither is no good.
         """
         return super().all_entries_valid() and (
-            self._entries["price"].get() != "" or
-            self._entries["amount"].get() != "")
+            self._entries["price"].get() != ""
+            or self._entries["amount"].get() != ""
+        )
 
     def trade(self, func):
         """Forwards a Buy or Sell button press to the portfolio."""
@@ -431,10 +438,13 @@ class SplitFrame(TransactionFrame):
     def __init__(self, parent, controller=None, _preferences=None):
         """Lays out the split frame."""
         super().__init__(
-            parent, controller, tk.HORIZONTAL, "Splits / consolidations")
+            parent, controller, tk.HORIZONTAL, "Splits / consolidations"
+        )
 
         self.add_label("Receive")
-        self.add_validating_entry("multiplier", False, lambda v: float(v) > 0.0)
+        self.add_validating_entry(
+            "multiplier", False, lambda v: float(v) > 0.0
+        )
         self.add_label(" new for ")
         self.add_validating_entry("divisor", False, lambda v: float(v) > 0.0)
         self.add_label(" old     ")
@@ -775,7 +785,7 @@ class ResultsFrame(tk.Frame):
         return True
 
     def update_results(self):
-        """ Forward an update request to each tab. """
+        """Forward an update request to each tab."""
         for tab in self._tabs:
             tab.update_results()
         self.update_tab_labels()
@@ -788,6 +798,7 @@ class ResultsFrame(tk.Frame):
 
 class Settings(tk.Toplevel):
     """A window to facilitate preference changes"""
+
     def __init__(self, parent, controller, preferences):
         super().__init__(parent)
 
@@ -808,9 +819,11 @@ class Settings(tk.Toplevel):
         frame = tk.Frame(self)
         tk.Label(frame, text="Autosave every").grid(row=0, column=0, padx=5)
         tk.Entry(frame, width=3, textvariable=self.autosave_var).grid(
-            row=0, column=1)
+            row=0, column=1
+        )
         tk.Label(frame, text="minutes (zero to turn off)").grid(
-            row=0, column=2, padx=2, pady=5)
+            row=0, column=2, padx=2, pady=5
+        )
         frame.grid(row=0, column=0, padx=2, pady=5, sticky="w")
         frame = tk.Frame(self)
         tk.Label(frame, text="UI theme").grid(row=1, column=0, padx=5)
@@ -819,14 +832,17 @@ class Settings(tk.Toplevel):
             width=10,
             values=theme_names,
             state="readonly",
-            textvariable=self.theme_var)
+            textvariable=self.theme_var,
+        )
         combo.grid(row=1, column=1, padx=5)
         frame.grid(row=1, column=0, padx=2, pady=5, sticky="w")
         frame = tk.Frame(self)
         tk.Button(frame, text="OK", command=self._on_ok).grid(
-            row=0, column=0, padx=10)
+            row=0, column=0, padx=10
+        )
         tk.Button(frame, text="Cancel", command=self.withdraw).grid(
-            row=0, column=1, padx=10)
+            row=0, column=1, padx=10
+        )
         frame.grid(row=2, column=0, padx=2, pady=10)
 
     def _on_ok(self, _event=None):
@@ -838,6 +854,7 @@ class Settings(tk.Toplevel):
 
 class SymbolChanger(tk.Toplevel):
     """A window to facilitate symbol changes"""
+
     def __init__(self, parent, controller):
         super().__init__(parent)
 
@@ -852,24 +869,28 @@ class SymbolChanger(tk.Toplevel):
         self.bind("<Escape>", lambda e: self.destroy())
 
         tk.Label(self, text="Old symbol").grid(
-            row=0, column=0, padx=5, sticky="e")
+            row=0, column=0, padx=5, sticky="e"
+        )
         self._old = ttk.Combobox(
             self,
             width=12,
             values=controller.portfolio.holding_names,
-            state="readonly"
+            state="readonly",
         )
         self._old.grid(row=0, column=1, padx=15, pady=5, sticky="w")
         tk.Label(self, text="New symbol").grid(
-            row=1, column=0, padx=5, sticky="e")
+            row=1, column=0, padx=5, sticky="e"
+        )
         self._new = tk.Entry(self, width=12)
         self._new.grid(row=1, column=1, padx=15, pady=5, sticky="w")
         button_frame = tk.Frame(self)
         button_frame.grid(row=10, column=0, columnspan=2)
         tk.Button(button_frame, text="Ok", command=self._on_ok).grid(
-            row=10, column=0, padx=8, pady=15, sticky="e")
+            row=10, column=0, padx=8, pady=15, sticky="e"
+        )
         tk.Button(button_frame, text="Cancel", command=self.destroy).grid(
-            row=10, column=1, padx=8, pady=15, sticky="w")
+            row=10, column=1, padx=8, pady=15, sticky="w"
+        )
 
     def _on_ok(self):
         """Processes push of OK button"""

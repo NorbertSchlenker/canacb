@@ -1,4 +1,5 @@
-#!/bin/env python3
+#!/usr/bin/env python3
+
 """tkinter based widgets"""
 
 
@@ -49,7 +50,9 @@ class TableFrame(tk.Frame):
 
         self._tree.bind(
             "<Escape>",
-            lambda event: self._tree.selection_remove(event.widget.selection())
+            lambda event: self._tree.selection_remove(
+                event.widget.selection()
+            ),
         )
 
         y_scroll = ttk.Scrollbar(self, command=self._tree.yview)
@@ -98,7 +101,8 @@ class TableFrame(tk.Frame):
         if hasattr(self._parent, "title"):
             self.clipboard_append(self._parent.title + "\n\n")
         self.clipboard_append(
-            "\t".join([column[0] for column in self._columns]) + "\n")
+            "\t".join([column[0] for column in self._columns]) + "\n"
+        )
         for iid in self._tree.get_children():
             values = self._tree.item(iid, "values")
             self.clipboard_append("\t".join(values) + "\n")
@@ -235,8 +239,8 @@ class ValidatingEntry(tk.Entry):
         self._valid = self._is_valid(self.get().strip())
 
         self.config(
-            validate=when,
-            validatecommand=(self.register(self._changed), "%P"))
+            validate=when, validatecommand=(self.register(self._changed), "%P")
+        )
         self.bind("<Return>", lambda event: self._changed(self.get()))
 
     def _changed(self, text):

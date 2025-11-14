@@ -1,4 +1,5 @@
-#!/bin/env python3
+#!/usr/bin/env python3
+
 """Canadian ACB calculator - portfolio management
 
 A hierarchy of classes that manage assets within portfolios.
@@ -17,7 +18,7 @@ using multiple portfolios, and avoid dealing directly with other classes.
 
 import datetime
 
-from src.tools import fromisoformat, checked_float, pretty_float
+from .tools import fromisoformat, checked_float, pretty_float
 
 
 # -------------  "Protected" classes  ----------------
@@ -164,7 +165,8 @@ class Trade(Transaction):
                 amount = None
         except ValueError as exc:
             raise ValueError(
-                "Expecting (shares, price, fee, amount, fx)") from exc
+                "Expecting (shares, price, fee, amount, fx)"
+            ) from exc
 
         shares = checked_float(
             shares, lambda f: f > 0.0, "Share count must be positive"
@@ -173,7 +175,8 @@ class Trade(Transaction):
             if amount is None:
                 raise ValueError("Must have at least one of price and amount")
             amount = checked_float(
-                amount, lambda f: f > 0.0, "Amount must be positive")
+                amount, lambda f: f > 0.0, "Amount must be positive"
+            )
         else:
             if amount is None:
                 price = checked_float(
@@ -185,7 +188,8 @@ class Trade(Transaction):
             fee = 0.0
         else:
             fee = checked_float(
-                fee, lambda f: f >= 0.0, "Fee must be non-negative")
+                fee, lambda f: f >= 0.0, "Fee must be non-negative"
+            )
         if fx is None:
             fx = 1.0
         else:
@@ -204,7 +208,7 @@ class Trade(Transaction):
                 if self.fee == 0.0
                 else " {}{} fee".format(
                     "with " if self.amount is None else fee_sign,
-                    pretty_float(self.fee)
+                    pretty_float(self.fee),
                 )
             ),
             (
@@ -307,7 +311,8 @@ class Split(Transaction):
         if state.shares == 0.0:
             raise ValueError("Cannot split shares when none are held")
         return State(
-            state.shares * (self.multiplier / self.divisor), state.cost)
+            state.shares * (self.multiplier / self.divisor), state.cost
+        )
 
 
 class Adjust(Transaction):
@@ -339,12 +344,14 @@ class Adjust(Transaction):
             raise ValueError("Expecting (amount, fx, memo)") from exc
 
         amount = checked_float(
-            amount, lambda f: True, "Amount must be numeric")
+            amount, lambda f: True, "Amount must be numeric"
+        )
         if fx is None:
             fx = 1.0
         else:
             fx = checked_float(
-                fx, lambda f: f >= 0.0, "FX must be a positive number")
+                fx, lambda f: f >= 0.0, "FX must be a positive number"
+            )
 
         return (amount, fx, memo)
 
@@ -608,8 +615,10 @@ class Holding:
             description = transaction.description()
             if state.superficial is not None and state.superficial <= 0.0:
                 if state.gain == 0.0:
-                    description += " [{} superficial loss added to ACB]".format(
-                        pretty_float(-state.superficial)
+                    description += (
+                        " [{} superficial loss added to ACB]".format(
+                            pretty_float(-state.superficial)
+                        )
                     )
                 else:
                     total_loss = -(state.gain + state.superficial)
@@ -650,7 +659,8 @@ class Holding:
     def buy(self, settled, shares, price, fee, amount, fx):
         """Creates a transaction and applies it to the history"""
         return self._update_history_with(
-            Buy(settled, (shares, price, fee, amount, fx)))
+            Buy(settled, (shares, price, fee, amount, fx))
+        )
 
     def sell(self, settled, shares, price, fee, amount, fx):
         """Creates a transaction and applies it to the history"""
@@ -702,10 +712,12 @@ class Holding:
                 continue
             if transaction.amount is None:
                 proceeds = transaction.fx * (
-                    transaction.shares * transaction.price)
+                    transaction.shares * transaction.price
+                )
             else:
                 proceeds = transaction.fx * (
-                    transaction.amount + transaction.fee)
+                    transaction.amount + transaction.fee
+                )
             outlays = transaction.fx * transaction.fee
             acb = proceeds - outlays - state.gain
             total_shares += transaction.shares
@@ -945,8 +957,9 @@ class Portfolio:
         total_proceeds = 0.0
         total_gain = 0.0
         for symbol, holding in sorted(self._holdings.items()):
-            shares, acquired, proceeds, acb, outlays, gain = (
-                holding.s3_record(year))
+            shares, acquired, proceeds, acb, outlays, gain = holding.s3_record(
+                year
+            )
             if abs(shares) < 0.0000005:
                 continue
             result.append(
@@ -964,9 +977,15 @@ class Portfolio:
             total_gain += gain
 
         result.append(["", "", "", "", "", "", ""])
-        result.append([
-            "Totals", "", "",
-            pretty_float(total_proceeds, blank_if_zero=False),
-            "", "",
-            pretty_float(total_gain, blank_if_zero=False)])
+        result.append(
+            [
+                "Totals",
+                "",
+                "",
+                pretty_float(total_proceeds, blank_if_zero=False),
+                "",
+                "",
+                pretty_float(total_gain, blank_if_zero=False),
+            ]
+        )
         return result

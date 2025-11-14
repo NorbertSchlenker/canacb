@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Unit test framework for portfolio module.
+Unit test framework for portfolio module
 """
 
 import unittest

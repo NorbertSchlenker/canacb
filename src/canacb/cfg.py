@@ -1,11 +1,12 @@
-#!/bin/env python3
+#!/usr/bin/env python3
+
 """Canadian ACB calculator - configuration"""
 
 import os
 
 
 APP_NAME = "CAN-ACB"
-APP_VERSION = "0.3"
+APP_VERSION = "0.4"
 APP_AUTHORS = "Norbert Schlenker"
 APP_LICENSE = "MIT"
 

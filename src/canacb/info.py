@@ -1,11 +1,12 @@
-#!/bin/env python3
+#!/usr/bin/env python3
+
 """Canadian ACB calculator - user interface information windows"""
 
 
 import tkinter as tk
 from tkinter import ttk, font as tkFont
 
-from src import cfg
+from . import cfg
 
 
 class About(tk.Toplevel):
@@ -47,22 +48,27 @@ class FAQ(tk.Toplevel):
     """Window to display frequently asked questions"""
 
     _FAQ = (
-        ("Why might I need this software?",
+        (
+            "Why might I need this software?",
             "Since 1972, "
             "Canadian tax law requires declaration of capital gains when you "
             "dispose of a capital asset, so that capital gains taxes can be "
             "assessed.\n\n"
             "It's usually simple to determine what you sold an asset "
             "for, but sometimes not so easy to reconstruct what its cost (in "
-            "tax terms, its \"adjusted cost base\") is if you\'ve bought and "
+            'tax terms, its "adjusted cost base") is if you\'ve bought and '
             "sold over many years.\n\n"
             "Records get lost and memories fade as time goes by. "
-            "CAN-ACB can help."),
-        ("My investments are all in my RRSP and TFSA. Do I need this?",
+            "CAN-ACB can help.",
+        ),
+        (
+            "My investments are all in my RRSP and TFSA. Do I need this?",
             "You don't.\n\n"
             "Adjusted cost base only needs to be tracked for assets "
-            "held in taxable accounts and subject to capital gains tax."),
-        ("What do I need to record?",
+            "held in taxable accounts and subject to capital gains tax.",
+        ),
+        (
+            "What do I need to record?",
             "Record any transaction that changes the share count of what you "
             "own, as they happen or when you see a change on a statement ...\n"
             "  - Purchases of new shares\n"
@@ -72,24 +78,28 @@ class FAQ(tk.Toplevel):
             "  - A sale of shares\n"
             "  - A split or consolidation which changes the share count\n\n"
             "There are a few more unusual cases where you should record an "
-            "\"Adjustment\"\n"
-            "  - An amount reported in Box 42 of a T3 tax slip is \"return "
-            "of capital\", which reduces ACB. Record these!\n"
-            "  - ETFs can pay \"phantom dividends\", capital gains "
+            '"Adjustment"\n'
+            '  - An amount reported in Box 42 of a T3 tax slip is "return '
+            'of capital", which reduces ACB. Record these!\n'
+            '  - ETFs can pay "phantom dividends", capital gains '
             "dividends which are reinvested but do not change share count. "
-            "These increase ACB and should be recorded."),
-        ("Why \"adjusted\" cost base?",
-            "For tax purposes, the \"cost base\" of an asset is what you paid "
+            "These increase ACB and should be recorded.",
+        ),
+        (
+            'Why "adjusted" cost base?',
+            'For tax purposes, the "cost base" of an asset is what you paid '
             "to acquire it. (In some cases, e.g. for a gift, the cost base is "
             "the fair market value at the time.)\n\n"
             "Things can happen during ownership that change the asset's cost. "
             "Among securities, REITs and ETFs often pay "
-            "distributions that are part or all \"return of capital\".\n\n"
+            'distributions that are part or all "return of capital".\n\n'
             "Return of capital isn't taxable immediately, but it reduces the "
-            "\"adjusted\" cost base of the asset. "
+            '"adjusted" cost base of the asset. '
             "Then, when the asset is sold, the capital "
-            "gain will be larger and tax will eventually be collected."),
-        ("Won't my broker keep track of this for me?",
+            "gain will be larger and tax will eventually be collected.",
+        ),
+        (
+            "Won't my broker keep track of this for me?",
             "You wish! Brokers are pretty good these days at keeping track of "
             "purchase cost, but mixed distributions and really ancient "
             "holdings will throw them for a loop.\n\n"
@@ -102,27 +112,35 @@ class FAQ(tk.Toplevel):
             "Broker A will say you realized a $5000 gain. "
             "Broker B would say it was a $1000 loss.\n\n"
             "CRA insists you use average cost - $50/share - "
-            "so your capital gain is $3000 for tax purposes."),
-        ("Will this work for property other than securities?",
+            "so your capital gain is $3000 for tax purposes.",
+        ),
+        (
+            "Will this work for property other than securities?",
             "It will, but it's cumbersome and likely overkill for most things."
             "\n\n"
             "You need this kind of recordkeeping where you have multiple "
             "purchases and sales of the same kind of property, at different "
             "time and prices. Anything where you need to know "
-            "\"how many\" at the same time as \"how much did they cost,\" "
+            '"how many" at the same time as "how much did they cost," '
             "in order to satisfy tax authorities.\n\n"
             "So stocks. Or bonds. Or Krugerrands.\n\n"
             "Pairs of socks if you like (and are OCD), as long as you invent "
-            "\"ticker symbols\" to distinguish white from black, or Nike from "
-            "Gold Toe."),
-        ("Do I have to use average cost?",
-            "For securities in Canada, yes. It's the law."),
-        ("I need FIFO for my US taxes. Will CAN-ACB handle that?",
+            '"ticker symbols" to distinguish white from black, or Nike from '
+            "Gold Toe.",
+        ),
+        (
+            "Do I have to use average cost?",
+            "For securities in Canada, yes. It's the law.",
+        ),
+        (
+            "I need FIFO for my US taxes. Will CAN-ACB handle that?",
             "It will not.\n\n"
             "FIFO is more complex to deal with than average cost "
             "and the added option of specific ID for US taxpayers "
-            "complicates cost accounting under US tax law even more.\n\n"),
-        ("Does this track foreign assets?",
+            "complicates cost accounting under US tax law even more.\n\n",
+        ),
+        (
+            "Does this track foreign assets?",
             "When asset transactions are priced in a foreign currency, you "
             "should enter the price or amount in the foreign currency and "
             "also record the exchange rate to Canadian dollars on the "
@@ -131,15 +149,19 @@ class FAQ(tk.Toplevel):
             "argument for recording the rate as of the TRADE date, not the "
             "SETTLED date that you have for the transaction. "
             "It's your choice. Pick a method and "
-            "stick with it for everything, and you will be fine with CRA."),
-        ("Dates are labelled \"settled\". What's that about?",
+            "stick with it for everything, and you will be fine with CRA.",
+        ),
+        (
+            'Dates are labelled "settled". What\'s that about?',
             "If you sell Royal Bank shares on the TSX "
             "today, the trade settles on the next business day.  If today is "
-            "Friday Dec 29th, you \"sell\" the shares today but "
-            "you \"own\" them through Tuesday Jan 2nd.\n\n"
+            'Friday Dec 29th, you "sell" the shares today but '
+            'you "own" them through Tuesday Jan 2nd.\n\n'
             "Canadian tax law says that the sale occurred after New Years. "
-            "That is the date you have to record."),
-        ("Any tips or recommendations for using the software?",
+            "That is the date you have to record.",
+        ),
+        (
+            "Any tips or recommendations for using the software?",
             "Keep your life simple. "
             "Use one portfolio per individual taxpayer, not per financial "
             "account.\n\n"
@@ -152,21 +174,27 @@ class FAQ(tk.Toplevel):
             "  No edits of transactions in this version ... add a "
             "corrected copy and delete the bad one\n"
             "  You can delete a transaction by selecting it in the history "
-            "and pressing Delete"),
-        ("Where is my data stored?",
-            "This version stores all data in a file named \"canacb.json\" in "
-            "the \"data\" sub-directory. Future versions may relocate that "
+            "and pressing Delete",
+        ),
+        (
+            "Where is my data stored?",
+            'This version stores all data in a file named "canacb.json" in '
+            'the "data" sub-directory. Future versions may relocate that '
             "file in the local file system, but there are security reasons "
             "for this placement.\n\n"
             "NO future version will ever move this file to a remote machine "
-            "or to the \"cloud\", which is inherently less secure."),
-        ("This is sensitive financial info. Do you encrypt my data?",
+            'or to the "cloud", which is inherently less secure.',
+        ),
+        (
+            "This is sensitive financial info. Do you encrypt my data?",
             "We are not encryption wizards. "
             "The data is with the software. "
             "If some villain has physical access to your device, all bets are "
             "off.\n\n"
-            "The next q&a offers a security tip if you're worried."),
-        ("I share a computer with others. How about a password to get in?",
+            "The next q&a offers a security tip if you're worried.",
+        ),
+        (
+            "I share a computer with others. How about a password to get in?",
             "If you can't "
             "trust others that have access to the computer, then you probably "
             "don't keep sensitive/confidential data anywhere on the device. "
@@ -179,8 +207,10 @@ class FAQ(tk.Toplevel):
             "Of course, if you lend that thumb drive to someone ...\n"
             "Or lose the thumb drive ...\n"
             "Or it dies of old age ...\n\n"
-            "Somewhat related ... Do you backup all your files regularly?"),
-        ("Can I be sure my financial info won't end up in Kazakhstan?",
+            "Somewhat related ... Do you backup all your files regularly?",
+        ),
+        (
+            "Can I be sure my financial info won't end up in Kazakhstan?",
             "Improbable but not impossible. "
             "The software operates entirely locally. It doesn't use a network "
             "connection. It will run on a computer that is never connected to "
@@ -190,17 +220,23 @@ class FAQ(tk.Toplevel):
             "and then you attach it to an email sent to your girlfriend in "
             "Kazakhstan (or your husband sitting four feet away at the "
             "kitchen table, because that email can be routed via Kazakhstan), "
-            "it's a possibility."),
-        ("What does this software cost?",
+            "it's a possibility.",
+        ),
+        (
+            "What does this software cost?",
             "Nothing. It's absolutely free for you to use.\n\n"
             "No purchase price. No annoying ads. No subscription required. "
-            "No monthly fees. No salesman will call."),
-        ("Do I need to register / sign up?",
+            "No monthly fees. No salesman will call.",
+        ),
+        (
+            "Do I need to register / sign up?",
             "The software and its authors don't know who you are, don't want "
             "your name, address, email, or credit card details.\n\n"
             "This is not facebook or google or the cable company.\n\n"
-            "We have no interest in monetizing you or your habits."),
-        ("What platforms can I run this software on?",
+            "We have no interest in monetizing you or your habits.",
+        ),
+        (
+            "What platforms can I run this software on?",
             "CAN-ACB is written in Python and uses a cross-platform GUI named "
             "Tcl/Tk. You will need at least version 3.5 of Python and version "
             "8.6.8 of Tcl/Tk installed on your computer to run this software."
@@ -208,13 +244,18 @@ class FAQ(tk.Toplevel):
             "Testing has been done on a limited number of hardware/software "
             "combinations, under Windows, MacOS and Linux.\n\n"
             "The oldest hardware/software success to date was a 2007 "
-            "vintage laptop running a 2017 Linux/python/tcl software stack."),
-        ("Can I sue if something goes wrong?",
+            "vintage laptop running a 2017 Linux/python/tcl software stack.",
+        ),
+        (
+            "Can I sue if something goes wrong?",
             "This is free software, really just a calculator with a good "
             "memory and a very specific use.\n\n"
-            "No warranty of merchantability or fitness is provided."),
-        ("How do I report bugs or problems?",
-            "By email to canacb@libra-investments.com."),
+            "No warranty of merchantability or fitness is provided.",
+        ),
+        (
+            "How do I report bugs or problems?",
+            "By email to canacb@libra-investments.com.",
+        ),
     )
     _ANSWER_PADX = 15
     _WRAP_LENGTH = 630
@@ -242,7 +283,7 @@ class FAQ(tk.Toplevel):
             self,
             values=tuple(item[0] for item in self._FAQ),
             width=50,
-            state="readonly"
+            state="readonly",
         )
         self._questions.grid(row=0, column=0, padx=10, pady=10)
         self._questions.bind("<<ComboboxSelected>>", self._question_chosen)
@@ -262,16 +303,19 @@ class FAQ(tk.Toplevel):
         button_frame = tk.Frame(self)
         button_frame.grid(row=20, column=0, padx=15, pady=10)
         self._next = tk.Button(
-            button_frame, text="Next", command=self._on_next)
+            button_frame, text="Next", command=self._on_next
+        )
         self._next.grid(row=0, column=10, padx=10)
         self._enable_disable_next()
         close = tk.Button(button_frame, text="Close", command=self.iconify)
         close.grid(row=0, column=20, padx=10)
 
         min_width = max(
-            self.winfo_reqwidth(), self._WRAP_LENGTH + 2 * self._ANSWER_PADX)
-        self.geometry("+{}+{}".format(
-            self.winfo_screenwidth() - min_width - 50, 50))
+            self.winfo_reqwidth(), self._WRAP_LENGTH + 2 * self._ANSWER_PADX
+        )
+        self.geometry(
+            "+{}+{}".format(self.winfo_screenwidth() - min_width - 50, 50)
+        )
         self.deiconify()
 
     def _question_chosen(self, _event=None):
@@ -283,7 +327,8 @@ class FAQ(tk.Toplevel):
     def _on_next(self):
         """Advances to the next question and answer."""
         self._questions.current(
-            min(self._questions.current() + 1, len(self._FAQ) - 1))
+            min(self._questions.current() + 1, len(self._FAQ) - 1)
+        )
         self._questions.select_clear()
         self._answer.set(self._FAQ[self._questions.current()][1])
         self._enable_disable_next()

@@ -1,4 +1,5 @@
-#!/bin/env python3
+#!/usr/bin/env python3
+
 """Canadian ACB calculator
 
 An application with a graphical user interface to aid Canadians when
@@ -13,15 +14,12 @@ import json
 import os
 import time
 
-from src import cfg
-from src.nameserver import NameServer
-from src.pfo import PortfolioManager
-from src.ui import UserInterface
+from . import cfg
+from .nameserver import NameServer
+from .pfo import PortfolioManager
+from .ui import UserInterface
 
 
-DATA_FILE = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "data", "canacb.json"
-)
 TIMESTAMP_FORMAT = "%Y-%m-%d:%H:%M:%S%z"
 
 
@@ -82,7 +80,7 @@ class CanACB:
             self._NAMES: self._names,
         }
 
-        return save_to_json(serializable, DATA_FILE)
+        return save_to_json(serializable, cfg.DATA_FILE)
 
 
 def load_from_json(filename, expected_type=dict):
