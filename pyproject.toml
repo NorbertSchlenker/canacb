@@ -38,7 +38,7 @@ Documentation = "https://not-a-url.org"
 Changelog = "https://not-a-url.org"
 
 [project.scripts]
-cli = "canacb:main_cli"
+canacb = "canacb.main:main"
 
 [project.gui-scripts]
-gui = "canacb:main_gui"
+canacb = "canacb.main:main"

@@ -212,6 +212,7 @@ class ToolTip:
 
 
 # pylint: disable=too-many-ancestors
+# pylint: disable=too-many-arguments, too-many-positional-arguments
 class ValidatingEntry(tk.Entry):
     """A tkinter Entry that validates contents on the fly per supplied test.
     Invalid contents are displayed in red as a visual cue to the user.

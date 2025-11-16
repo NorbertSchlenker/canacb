@@ -710,7 +710,7 @@ class Schedule3Frame(ResultsTab):
 
         year = preferences.get("year", "")
         if not is_valid_year(year):
-            year = datetime.date.today().year
+            year = str(datetime.date.today().year)
             self._preferences["year"] = year
         self._table.add_picker(is_valid_year, "  Year  ", year)
 

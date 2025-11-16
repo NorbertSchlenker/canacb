@@ -22,6 +22,7 @@ DEFAULT_PREFERENCES = {
 }
 
 
+# pylint: disable=too-many-instance-attributes, too-many-public-methods
 class UserInterface:
     """The application controller"""
 
@@ -149,9 +150,6 @@ class UserInterface:
         self._root.withdraw()
         self._root.destroy()
         return True
-
-    def change_settings(self):
-        """Allows the user to change a few preferences"""
 
     def change_symbol(self):
         """Allows the user to change a symbol"""

@@ -5,7 +5,7 @@ Unit test framework for portfolio module
 
 import unittest
 
-from src.pfo import PortfolioManager, Portfolio, Holding
+from src.canacb.pfo import PortfolioManager, Portfolio, Holding
 
 
 class TestManager(unittest.TestCase):

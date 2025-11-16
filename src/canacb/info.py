@@ -38,6 +38,9 @@ class About(tk.Toplevel):
         tk.Label(self, text="License: {}".format(cfg.APP_LICENSE)).grid(
             row=12, column=0, padx=10, pady=0, sticky="w"
         )
+        tk.Label(self, text="Data file: {}".format(cfg.DATA_FILE)).grid(
+            row=13, column=0, padx=10, pady=0, sticky="w"
+        )
 
         tk.Button(self, text="Close", command=self.withdraw).grid(
             row=20, column=0, padx=10, pady=10, sticky="e"
@@ -178,12 +181,13 @@ class FAQ(tk.Toplevel):
         ),
         (
             "Where is my data stored?",
-            'This version stores all data in a file named "canacb.json" in '
-            'the "data" sub-directory. Future versions may relocate that '
-            "file in the local file system, but there are security reasons "
-            "for this placement.\n\n"
-            "NO future version will ever move this file to a remote machine "
-            'or to the "cloud", which is inherently less secure.',
+            'This version stores all data in a file named "canacb.json". '
+            "The default directory in which this file is located varies "
+            "depending on the computer and operating system that you use, "
+            "but it is ALWAYS on your local file system. NO future version "
+            "of this software will ever move this file to a remote machine "
+            'or to the "cloud".\n\n'
+            'To find exact placement, use the "About" menu item.',
         ),
         (
             "This is sensitive financial info. Do you encrypt my data?",
@@ -258,7 +262,7 @@ class FAQ(tk.Toplevel):
         ),
     )
     _ANSWER_PADX = 15
-    _WRAP_LENGTH = 630
+    _WRAP_LENGTH = 600
 
     def __init__(self, parent):
         """Lays out the FAQ window."""
@@ -295,7 +299,7 @@ class FAQ(tk.Toplevel):
             height=13,
             justify="left",
             textvariable=self._answer,
-            width=70,
+            width=self._WRAP_LENGTH // 8,  # divisor is a decent guess
             wraplength=self._WRAP_LENGTH,
         )
         answers.grid(row=10, column=0, padx=self._ANSWER_PADX, sticky="nsew")

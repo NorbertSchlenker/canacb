@@ -23,6 +23,7 @@ from .ui import UserInterface
 TIMESTAMP_FORMAT = "%Y-%m-%d:%H:%M:%S%z"
 
 
+# pylint: disable=too-few-public-methods
 class CanACB:
     """The application"""
 

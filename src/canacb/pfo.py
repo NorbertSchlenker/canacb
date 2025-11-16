@@ -656,12 +656,14 @@ class Holding:
         except ValueError as failure:
             return str(failure)
 
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
     def buy(self, settled, shares, price, fee, amount, fx):
         """Creates a transaction and applies it to the history"""
         return self._update_history_with(
             Buy(settled, (shares, price, fee, amount, fx))
         )
 
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
     def sell(self, settled, shares, price, fee, amount, fx):
         """Creates a transaction and applies it to the history"""
         return self._update_history_with(

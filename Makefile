@@ -28,7 +28,7 @@ test: $(VENV)
 .PHONY: lint
 lint: $(VENV)
 	$(BIN)/black -l 79 src
-	$(BIN)/flake8 --extend-ignore F401 src
+	$(BIN)/flake8 --per-file-ignores="__init__.py:F401" src
 	$(BIN)/pylint --py-version 3.5 src
 
 .PHONY: build
