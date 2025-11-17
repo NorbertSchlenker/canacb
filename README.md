@@ -1,9 +1,12 @@
-# canacb
-Adjusted cost base tracker for Canadian investors
+# canacb - Adjusted cost base tracker for Canadian investors
 
-Since 1972, Canadian tax law requires declaration of capital gains when you dispose of a capital asset, so that capital gains taxes can be assessed.
-It's usually simple to determine what you sold an asset for, but sometimes not so easy to reconstruct what its cost (in tax terms, its "adjusted cost base")
-is if you've bought and sold over many years.  Records get lost. Memories fade as time goes by. CAN-ACB can help.
+Since 1972, Canadian tax law requires declaration of capital gains when you
+dispose of a capital asset, so that capital gains taxes can be assessed.
+It's usually simple to determine what you sold an asset for, but sometimes
+not so easy to reconstruct what its cost (in tax terms, its "adjusted cost
+base") is if you've bought and sold over many years.
+
+Records get lost. Memories fade as time goes by. CAN-ACB can help.
 
 ## Features
 - Cross platform pure Python3 application with an intuitive graphical user interface
@@ -18,12 +21,10 @@ is if you've bought and sold over many years.  Records get lost. Memories fade a
 - No internet access required; usable on an air gapped machine after installation
 
 ## Software prerequisites
-- git
 - python >= 3.5
 - tk/tcl >= 8.6.8
 
-## Installation and usage (preliminary)
+## Installation and usage
 ```bash
-$ git clone https://github.com/NorbertSchlenker/canacb
-$ cd canacb
-$ python3 ./canacb
+$ pip install canacb
+$ canacb

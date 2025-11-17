@@ -12,7 +12,7 @@ endif
 
 all: lint test
 
-environment: $(VENV)
+venv: $(VENV)
 
 $(VENV): pyproject.toml
 	$(PY) -m venv $(VENV)
@@ -41,7 +41,7 @@ clean:
 	find . -type d -name __pycache__ -delete
 	rm -rf dist
 
-.PHONY: cleanup
-cleanup:
+.PHONY: completelyclean
+completelyclean: clean
 	rm -rf $(VENV)
 

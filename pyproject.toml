@@ -14,13 +14,20 @@ authors = [
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
-keywords = [
-]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: End Users/Desktop",
   "Programming Language :: Python :: 3",
   "Topic :: Office/Business :: Financial :: Investment",
+]
+keywords = [
+  "adjusted cost base",
+  "acb",
+  "canada",
+  "canadian",
+  "capital",
+  "gains",
+  "tax",
 ]
 
 [project.optional-dependencies]
@@ -32,10 +39,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://not-a-url.org"
+Homepage = "https://github.com/NorbertSchlenker/canacb"
+Download = "https://not-a-url.org"
+Changelog = "https://not-a-url.org"
 Documentation = "https://not-a-url.org"
 "Bug Tracker" = "https://not-a-url.org"
-Changelog = "https://not-a-url.org"
 
 [project.scripts]
 canacb = "canacb.main:main"
