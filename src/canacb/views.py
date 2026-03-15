@@ -234,7 +234,6 @@ class CommonFrame(tk.Frame):
         if new_symbol == old_symbol:
             return True
         if new_symbol == "":
-            self._symbol_box.set(old_symbol)
             return True
         if new_symbol not in self.portfolio:
             self._name_entry.delete(0, tk.END)
@@ -265,15 +264,18 @@ class CommonFrame(tk.Frame):
     def _settled_entry_is_valid(self):
         """Returns True if the settled Entry looks like a date, while
         fixing minor format issues."""
+        settled = self._settled_entry.get()
         try:
-            settled = self._settled_entry.get()
-            fixed = fromisoformat(settled).isoformat()
-            if settled != fixed:
-                self._settled_entry.delete(0, tk.END)
-                self._settled_entry.insert(0, fixed)
-            return True
+            settled_d = fromisoformat(settled)
         except ValueError:
             return False
+        if settled_d is None:
+            return False
+        fixed = settled_d.isoformat()
+        if settled != fixed:
+            self._settled_entry.delete(0, tk.END)
+            self._settled_entry.insert(0, fixed)
+        return True
 
 
 class TransactionFrame(tk.LabelFrame):
